@@ -1,5 +1,7 @@
 <?php
 
+namespace WesleyE\JsonModel\Test;
+
 use PHPUnit\Framework\TestCase;
 use WesleyE\JsonModel\Test\TestModels\Country;
 

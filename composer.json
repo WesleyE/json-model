@@ -30,6 +30,7 @@
     "scripts": {
         "lint": "parallel-lint src tests",
         "phpcs": "phpcs src tests --standard=psr2 -sp --colors",
+        "lint-fix": "phpcbf src tests --standard=psr2 -sp --colors",
         "phpunit": "phpunit --verbose",
         "test": [
             "@lint",

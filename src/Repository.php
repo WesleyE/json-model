@@ -55,7 +55,7 @@ final class Repository
     /**
      * Load a single file and return the model.
      *
-     * @param string $file
+     * @param  string $file
      * @return JsonModel
      */
     public function loadModel(string $file)
@@ -82,8 +82,8 @@ final class Repository
     /**
      * Search for a model by type and ID
      *
-     * @param string $type
-     * @param mixed $id
+     * @param  string $type
+     * @param  mixed  $id
      * @return JsonModel
      */
     public function getModelByTypeAndId(string $type, $id)
@@ -95,9 +95,9 @@ final class Repository
     /**
      * Search for a model by type and attribute value
      *
-     * @param string $type
-     * @param string $attribute
-     * @param mixed $value
+     * @param  string $type
+     * @param  string $attribute
+     * @param  mixed  $value
      * @return JsonModel
      */
     public function getModelByTypeAndAttribute(string $type, $attribute, $value)

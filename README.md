@@ -5,3 +5,10 @@ The JSON-Model library allows you to save and load JSON Data from disk. It also 
 ## Notes
 
 This is far from production ready, do not use (yet).
+
+## Todo List
+
+- [ ] Move to a proper UUID package
+- [ ] Define tests
+- [ ] Let the developer specify the json output directory
+- [ ] Create documentation

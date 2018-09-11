@@ -53,7 +53,7 @@ class RelatesTo
     /**
      * Load and return the referenced model relative to this file.
      *
-     * @param string $ref
+     * @param  string $ref
      * @return JsonModel
      */
     protected function getReferencedModel($ref)

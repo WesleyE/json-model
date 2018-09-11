@@ -100,7 +100,7 @@ class JsonModel implements \JsonSerializable
     /**
      * Deserialize the model
      *
-     * @param array $attributes
+     * @param  array $attributes
      * @return void
      */
     public function deserialize(array $attributes)
@@ -147,8 +147,8 @@ class JsonModel implements \JsonSerializable
     /**
      * Sets an attribuet
      *
-     * @param string $name
-     * @param $value
+     * @param  string $name
+     * @param  $value
      * @return void
      */
     public function setAttribute(string $name, $value)
@@ -220,7 +220,7 @@ class JsonModel implements \JsonSerializable
     /**
      * Load and return the referenced model relative to this file.
      *
-     * @param string $ref
+     * @param  string $ref
      * @return JsonModel
      */
     protected function getReferencedModel($ref)

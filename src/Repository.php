@@ -13,7 +13,7 @@ final class Repository
     /**
      * Path of the repository
      */
-    public const REPO_PATH = __DIR__ . '/JsonRepository/';
+    public const REPO_PATH = __DIR__ . '/../tests/Json/';
 
     /**
      * Class path to the Models Directory

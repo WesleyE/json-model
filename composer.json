@@ -1,0 +1,50 @@
+{
+    "name": "wesleye/json-model",
+    "description": "A JSON Model structure to save and load data from JSON files",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "json",
+        "model",
+        "relations"
+    ],
+    "authors": [
+        {
+            "name": "Wesley Elfring",
+            "email": "wesleyelfring@gmail.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "WesleyE\\JsonModel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WesleyE\\JsonModel\\Test\\": "tests/"
+        }
+    },
+    "scripts": {
+        "lint": "parallel-lint src tests",
+        "phpcs": "phpcs src tests --standard=psr2 -sp --colors",
+        "phpunit": "phpunit --verbose",
+        "test": [
+            "@lint",
+            "@phpunit",
+            "@phpcs"
+        ]
+    },
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*",
+        "ramsey/uuid": "^3.8"
+    },
+    "require-dev": {
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "phpunit/phpunit": "^7.3",
+        "squizlabs/php_codesniffer": "^3.3"
+    }
+}

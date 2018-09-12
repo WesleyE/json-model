@@ -43,4 +43,53 @@ final class ModelTest extends TestCase
     }
 }', $contents);
     }
+
+    public function testCanGetSetAttributes(): void
+    {
+        $instance = Country::new();
+        $instance->name = 'The Netherlands';
+        $instance->setAttribute('alpha_2', 'NL');
+
+        $attributes = $instance->getAttributes();
+
+        $defaultAttributes = [
+            'id' => $instance->id,
+            'type' => 'Country',
+            'name' => 'The Netherlands',
+            'alpha_2' => 'NL',
+            'region' => [
+                '$ref' => null,
+            ]
+        ];
+
+        $this->assertEquals($defaultAttributes, $attributes);
+    }
+
+    public function testThrowsWhenAccessingUnknownAttribute(): void
+    {
+        $this->expectException(\Exception::class);
+        $instance = Country::new();
+        $instance->test;
+    }
+
+    public function testThrowsWhenAccessingUnknownAttributeByFunction(): void
+    {
+        $this->expectException(\Exception::class);
+        $instance = Country::new();
+        $instance->getAttribute('test');
+    }
+
+    public function testThrowsWhenSettingUnknownAttributeByFunction(): void
+    {
+        $this->expectException(\Exception::class);
+        $instance = Country::new();
+        $instance->setAttribute('test', 1);
+    }
+
+    public function testThrowsWhenSettingUnknownAttribute(): void
+    {
+        $this->expectException(\Exception::class);
+        $instance = Country::new();
+        $instance->test = 1;
+    }
 }

@@ -27,7 +27,7 @@ class Repository
     protected $loadedModels = [];
 
     /**
-     * Loaded full file paths for easy lookups. Paths map to 
+     * Loaded full file paths for easy lookups. Paths map to
      * an array with pathIndex = [type, uuid].
      *
      * @var array
@@ -86,7 +86,7 @@ class Repository
     {
         // echo "\n\tLoading: " . $file . "\n";
         // Check for path and return if already loaded
-        if(array_key_exists($file, $this->loadedPaths)) {
+        if (array_key_exists($file, $this->loadedPaths)) {
             // echo "\n\t\tFrom Cache\n";
             // Load the correct file
             return $this->loadedPaths[$file];
@@ -156,7 +156,7 @@ class Repository
         $json = json_encode($model, JSON_PRETTY_PRINT);
         $path = $model->getFullFilePath();
 
-        if(empty($path)) {
+        if (empty($path)) {
             throw new \Exception('Cannot save the model to an empty path.');
         }
 

@@ -117,7 +117,8 @@ class JsonModel implements \JsonSerializable
      *
      * @return Repository
      */
-    public function getRepository() {
+    public function getRepository()
+    {
         return $this->repository;
     }
 
@@ -232,7 +233,8 @@ class JsonModel implements \JsonSerializable
      *
      * @return boolean
      */
-    public function isDirty() {
+    public function isDirty()
+    {
         return $this->dirty;
     }
 
@@ -241,7 +243,8 @@ class JsonModel implements \JsonSerializable
      *
      * @return boolean
      */
-    public function setDirty($dirty) {
+    public function setDirty($dirty)
+    {
         return $this->dirty = $dirty;
     }
 
@@ -250,7 +253,8 @@ class JsonModel implements \JsonSerializable
      *
      * @return boolean
      */
-    public function isSaved() {
+    public function isSaved()
+    {
         return is_file($this->getFullFilePath());
     }
 }

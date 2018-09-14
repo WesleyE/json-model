@@ -37,7 +37,7 @@ class RelatesTo
      */
     public function associate($model)
     {
-        if(!$model->isSaved()) {
+        if (!$model->isSaved()) {
             throw new \Exception('Cannot associate unsaved models.');
         }
         $this->child->setAttribute($this->referenceAttribute, ['$ref' => $model->getRelativeFilePath()]);

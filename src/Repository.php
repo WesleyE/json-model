@@ -158,10 +158,6 @@ class Repository
         $json = json_encode($model, JSON_PRETTY_PRINT);
         $path = $model->getFullFilePath();
 
-        if (empty($path)) {
-            throw new ModelNotFoundException('Cannot save the model to an empty path.');
-        }
-
         file_put_contents($path, $json);
 
         $this->loadedModels[$model->type][$model->id] = $model;

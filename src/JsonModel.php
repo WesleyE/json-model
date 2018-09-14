@@ -99,6 +99,10 @@ class JsonModel implements \JsonSerializable
      */
     public function getFullFilePath()
     {
+        $filename = $this->getFilename();
+        if (empty($filename) || $filename === ".json") {
+            throw new \Exception('Cannot save a model when the filename resolves to an empty string');
+        }
         return $this->repository->getRepositoryPath() . $this->getModelDirectory() . '/' . $this->getFilename();
     }
 
@@ -109,6 +113,10 @@ class JsonModel implements \JsonSerializable
      */
     public function getRelativeFilePath()
     {
+        $filename = $this->getFilename();
+        if (empty($filename) || $filename === ".json") {
+            throw new \Exception('Cannot save a model when the filename resolves to an empty string');
+        }
         return  $this->getModelDirectory() . '/' . $this->getFilename();
     }
 

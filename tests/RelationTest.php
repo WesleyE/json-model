@@ -7,6 +7,7 @@ use WesleyE\JsonModel\Test\TestModels\Country;
 use WesleyE\JsonModel\Test\TestModels\Region;
 use WesleyE\JsonModel\Repository;
 use WesleyE\JsonModel\Exceptions\ModelNotFoundException;
+use WesleyE\JsonModel\Relations\Exceptions\NoModelReferenceException;
 
 final class RelationTest extends BaseTest
 {
@@ -33,15 +34,10 @@ final class RelationTest extends BaseTest
         $this->clearCacheAndRepository();
 
         // Setup the region and save it
-        $region = Region::new($this->repository);
-        $region->name = 'Europe';
-        $this->repository->save($region);
+        $region = $this->createEurope();
         
         // Setup the country
-        $country = Country::new($this->repository);
-        $country->alpha_2 = 'NL';
-        $country->name = 'The Netherlands';
-        $this->repository->save($country);
+        $country = $this->createNetherlands();
 
         // Attach the region
         $country->region()->associate($region);
@@ -63,21 +59,15 @@ final class RelationTest extends BaseTest
         $this->clearCacheAndRepository();
 
         // Setup the region and save it
-        $region = Region::new($this->repository);
-        $region->name = 'Europe';
-        $this->repository->save($region);
+        $region = $this->createEurope();
         
         // Setup the country
-        $country = Country::new($this->repository);
-        $country->alpha_2 = 'NL';
-        $country->name = 'The Netherlands';
+        $country = $this->createNetherlands();
         $country->region()->associate($region);
         $this->repository->save($country);
 
         // Setup the country
-        $country2 = Country::new($this->repository);
-        $country2->alpha_2 = 'BE';
-        $country2->name = 'Belgium';
+        $country2 = $this->createBelgium();
         $country2->region()->associate($region);
         $this->repository->save($country2);
 
@@ -88,5 +78,36 @@ final class RelationTest extends BaseTest
         $associatedRegion = $country2->region()->get();
         
         $this->assertEquals('Europe_2', $associatedRegion->getAttribute('name'));
+    }
+
+    public function testSetRawReference(): void
+    {
+        $this->clearCacheAndRepository();
+
+        // Setup the country
+        $country = $this->createBelgium();
+        $country->setAttribute('region', ['$ref' => 'blep.json']);
+        $this->repository->save($country);
+
+        $this->expectException(ModelNotFoundException::class);
+        $associatedRegion = $country->region()->get();
+    }
+
+    public function testCanDissociate(): void
+    {
+        $this->clearCacheAndRepository();
+
+        // Setup the country
+        $country = $this->createBelgium();
+        $region = $this->createEurope();
+        $country->region()->associate($region);
+
+        $associatedRegion = $country->region()->get();
+        $this->assertEquals($region, $associatedRegion);
+        
+        $country->region()->dissociate();
+
+        $this->expectException(NoModelReferenceException::class);
+        $associatedRegion = $country->region()->get();
     }
 }

@@ -26,7 +26,7 @@ class RelatesTo
         // Check if the relation has a ref
         $childAttributes = $this->child->getAttributes();
 
-        if (!array_key_exists('$ref', $childAttributes[$this->referenceAttribute])) {
+        if (!array_key_exists('$ref', $childAttributes[$this->referenceAttribute]) || empty($childAttributes[$this->referenceAttribute]['$ref'])) {
             throw new NoModelReferenceException();
         }
 

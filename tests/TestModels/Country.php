@@ -3,7 +3,7 @@
 namespace WesleyE\JsonModel\Test\TestModels;
 
 use WesleyE\JsonModel\JsonModel;
-use WesleyE\JsonModel\RelatesTo;
+use WesleyE\JsonModel\Relations\RelatesTo;
 
 class Country extends JsonModel
 {

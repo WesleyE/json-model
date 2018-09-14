@@ -1,6 +1,9 @@
 <?php
 
-namespace WesleyE\JsonModel;
+namespace WesleyE\JsonModel\Relations;
+
+use WesleyE\JsonModel\Relations\Exceptions\NoModelReferenceException;
+use WesleyE\JsonModel\Exceptions\ModelNotFoundException;
 
 class RelatesTo
 {
@@ -24,7 +27,7 @@ class RelatesTo
         $childAttributes = $this->child->getAttributes();
 
         if (!array_key_exists('$ref', $childAttributes[$this->referenceAttribute])) {
-            throw new \Exception('Relation has no ref.');
+            throw new NoModelReferenceException();
         }
 
         return $this->getReferencedModel($childAttributes[$this->referenceAttribute]['$ref']);
@@ -38,7 +41,7 @@ class RelatesTo
     public function associate($model)
     {
         if (!$model->isSaved()) {
-            throw new \Exception('Cannot associate unsaved models.');
+            throw new ModelNotFoundException('Cannot associate unsaved models.');
         }
         $this->child->setAttribute($this->referenceAttribute, ['$ref' => $model->getRelativeFilePath()]);
     }

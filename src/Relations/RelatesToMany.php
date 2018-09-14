@@ -1,6 +1,6 @@
 <?php
 
-namespace WesleyE\JsonModel;
+namespace WesleyE\JsonModel\Relations;
 
 class RelatesToMany
 {

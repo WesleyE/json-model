@@ -3,7 +3,7 @@
 namespace WesleyE\JsonModel\Test\TestModels;
 
 use WesleyE\JsonModel\JsonModel;
-use WesleyE\JsonModel\RelatesToMany;
+use WesleyE\JsonModel\Relations\RelatesToMany;
 
 class Region extends JsonModel
 {

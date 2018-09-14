@@ -39,7 +39,7 @@ $associatedRegion = $country->region()->get();
 - [x] Move to an non-static repository, but keep the model<->repo connection
 - [x] We cannot use 'realpath' when the relation does not exist yet
 - [x] Create 'dirty' checks for saving
-- [ ] Create our own Exceptions
+- [x] Create our own Exceptions
 - [ ] Resolve the 'inverse' and add the relation
 - [ ] Define tests for the repository
 - [ ] Create documentation

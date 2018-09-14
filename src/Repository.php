@@ -2,6 +2,8 @@
 
 namespace WesleyE\JsonModel;
 
+use WesleyE\JsonModel\Exceptions\ModelNotFoundException;
+
 /**
  * JSON Model Repository
  *
@@ -104,7 +106,7 @@ class Repository
             $model = new $class($this);
             $model->deserialize($json);
         } catch (\Exception $e) {
-            throw new \Exception('Could not load model.', 100, $e);
+            throw new ModelNotFoundException('Could not load model.', 100, $e);
         }
 
         // Add to the repository
@@ -157,7 +159,7 @@ class Repository
         $path = $model->getFullFilePath();
 
         if (empty($path)) {
-            throw new \Exception('Cannot save the model to an empty path.');
+            throw new ModelNotFoundException('Cannot save the model to an empty path.');
         }
 
         file_put_contents($path, $json);

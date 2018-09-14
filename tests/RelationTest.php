@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use WesleyE\JsonModel\Test\TestModels\Country;
 use WesleyE\JsonModel\Test\TestModels\Region;
 use WesleyE\JsonModel\Repository;
+use WesleyE\JsonModel\Exceptions\ModelNotFoundException;
 
 final class RelationTest extends BaseTest
 {
@@ -23,7 +24,7 @@ final class RelationTest extends BaseTest
         $country->name = 'The Netherlands';
 
         // Attach the region
-        $this->expectException(\Exception::class);
+        $this->expectException(ModelNotFoundException::class);
         $country->region()->associate($region);
     }
 
@@ -55,8 +56,10 @@ final class RelationTest extends BaseTest
 
     public function testSyncsUnsavedAttributesOnGrab(): void
     {
-        // country 1, country 2, region 1. Update region 1 'from' country 1, see when we grab
-        // region from country 2, the attributes are properly set.
+        /*
+         * country 1, country 2, region 1. Update region 1 'from' country 1, see when we grab
+         * region from country 2, the attributes are properly set.
+         */
         $this->clearCacheAndRepository();
 
         // Setup the region and save it

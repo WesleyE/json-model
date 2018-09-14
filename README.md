@@ -37,8 +37,9 @@ $associatedRegion = $country->region()->get();
 - [x] Move to a proper UUID package
 - [x] Let the developer specify the json output directory
 - [x] Move to an non-static repository, but keep the model<->repo connection
+- [x] We cannot use 'realpath' when the relation does not exist yet
+- [x] Create 'dirty' checks for saving
+- [ ] Create our own Exceptions
 - [ ] Resolve the 'inverse' and add the relation
-- [ ] We cannot use 'realpath' when the relation does not exist yet
-- [ ] Create 'dirty' checks for saving
 - [ ] Define tests for the repository
 - [ ] Create documentation

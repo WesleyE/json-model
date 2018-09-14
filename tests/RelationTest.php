@@ -9,7 +9,8 @@ use WesleyE\JsonModel\Repository;
 
 final class RelationTest extends BaseTest
 {
-    public function testCanAttachUnsavedRelations(): void {
+    public function testCanAttachUnsavedRelations(): void
+    {
         $this->clearCacheAndRepository();
 
         // Setup the region

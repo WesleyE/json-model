@@ -39,23 +39,28 @@ final class Repository
     {
     }
 
-    public static function setRepositoryPath($path) {
+    public static function setRepositoryPath($path)
+    {
         self::$repoPath = $path;
     }
 
-    public static function getRepositoryPath() {
+    public static function getRepositoryPath()
+    {
         return self::$repoPath;
     }
 
-    public static function setRepositoryClassPath($classPath) {
+    public static function setRepositoryClassPath($classPath)
+    {
         self::$repoClassPath = $classPath;
     }
 
-    public static function getRepositoryClassPath() {
+    public static function getRepositoryClassPath()
+    {
         return self::$repoClassPath;
     }
 
-    public function clearModelCache() {
+    public function clearModelCache()
+    {
         $this->loadedModels = [];
     }
 

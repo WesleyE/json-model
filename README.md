@@ -10,13 +10,31 @@ The JSON-Model library allows you to save and load JSON Data from disk. It also 
 
 This is far from production ready, do not use (yet).
 
+## Examples
+```
+// Setup the region
+$region = Region::new();
+$region->name = 'Europe';
+
+// Setup the country
+$country = Country::new();
+$country->alpha_2 = 'NL';
+$country->name = 'The Netherlands';
+
+// Attach the region
+$country->region()->associate($region);
+
+// Test if we can get the region
+$associatedRegion = $country->region()->get();
+```
+
 ## Todo List
 
 - [x] Move to a proper UUID package
+- [x] Let the developer specify the json output directory
 - [ ] Move to an non-static repository, but keep the model<->repo connection
 - [ ] Resolve the 'inverse' and add the relation
 - [ ] We cannot use 'realpath' when the relation does not exist yet
 - [ ] Create 'dirty' checks for saving
 - [ ] Define tests for the repository
-- [ ] Let the developer specify the json output directory
 - [ ] Create documentation

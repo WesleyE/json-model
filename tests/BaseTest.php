@@ -11,14 +11,16 @@ abstract class BaseTest extends TestCase
 {
     protected $repository;
 
-    public function setUp() {
+    public function setUp()
+    {
         clearRepository();
         $this->repository = Repository::getInstance();
         $this->repository->setRepositoryPath(__DIR__ . '/Json/');
         $this->repository->setRepositoryClassPath('\\WesleyE\JsonModel\Test\\TestModels\\');
     }
 
-    public function clearCacheAndRepository() {
+    public function clearCacheAndRepository()
+    {
         clearRepository();
         $this->repository->clearModelCache();
     }

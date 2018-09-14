@@ -13,12 +13,12 @@ final class Repository
     /**
      * Path of the repository
      */
-    public const REPO_PATH = __DIR__ . '/../tests/Json/';
+    protected static $repoPath = '';
 
     /**
      * Class path to the Models Directory
      */
-    protected const REPO_CLASS_PATH = '\\App\\JSON\\Models\\';
+    protected static $repoClassPath = '';
 
     /**
      * Singleton Instance
@@ -37,6 +37,26 @@ final class Repository
 
     protected function __construct()
     {
+    }
+
+    public static function setRepositoryPath($path) {
+        self::$repoPath = $path;
+    }
+
+    public static function getRepositoryPath() {
+        return self::$repoPath;
+    }
+
+    public static function setRepositoryClassPath($classPath) {
+        self::$repoClassPath = $classPath;
+    }
+
+    public static function getRepositoryClassPath() {
+        return self::$repoClassPath;
+    }
+
+    public function clearModelCache() {
+        $this->loadedModels = [];
     }
 
     protected function __clone()
@@ -63,11 +83,11 @@ final class Repository
         // @todo: check for path and return if already loaded
 
         // Load JSON
-        $realPath = realpath(self::REPO_PATH . $file);
+        $realPath = realpath(self::$repoPath . $file);
         $json = json_decode(file_get_contents($realPath), true);
         
         // Grab type and deserialize
-        $class = self::REPO_CLASS_PATH.$json['type'];
+        $class = self::$repoClassPath.$json['type'];
         $id = $json['id'];
 
         $model = new $class();

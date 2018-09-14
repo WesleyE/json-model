@@ -27,6 +27,10 @@ class RelatesTo
             throw new \Exception('Relation has no ref.');
         }
 
+        echo "-------\n";
+        echo $childAttributes[$this->referenceAttribute]['$ref'];
+        echo "-------\n";
+
         return $this->getReferencedModel($childAttributes[$this->referenceAttribute]['$ref']);
     }
 

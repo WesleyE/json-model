@@ -4,8 +4,9 @@ namespace WesleyE\JsonModel\Test;
 
 use PHPUnit\Framework\TestCase;
 use WesleyE\JsonModel\Test\TestModels\Country;
+use WesleyE\JsonModel\Repository;
 
-final class ModelTest extends TestCase
+final class ModelTest extends BaseTest
 {
     public function testCanCreateNewModelInstance(): void
     {

@@ -40,6 +40,6 @@ $associatedRegion = $country->region()->get();
 - [x] We cannot use 'realpath' when the relation does not exist yet
 - [x] Create 'dirty' checks for saving
 - [x] Create our own Exceptions
+- [x] Define tests for the repository
 - [ ] Resolve the 'inverse' and add the relation
-- [ ] Define tests for the repository
 - [ ] Create documentation

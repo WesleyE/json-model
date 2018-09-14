@@ -2,17 +2,10 @@
 
 namespace WesleyE\JsonModel\Relations;
 
-class RelatesToMany
+use WesleyE\JsonModel\JsonModel;
+
+class RelatesToMany extends BaseRelation
 {
-    protected $child;
-    protected $referenceAttribute;
-
-    public function __construct($child, $referenceAttribute)
-    {
-        $this->child = $child;
-        $this->referenceAttribute = $referenceAttribute;
-    }
-
     /**
      * Grabs the related model and returns it.
      *
@@ -51,33 +44,19 @@ class RelatesToMany
      *
      * @return void
      */
-    public function detach()
+    public function detach(JsonModel $model)
     {
         $childAttributes = $this->child->getAttributes();
         $references = $childAttributes[$this->referenceAttribute];
 
-        $modelPath = $this->child->getRelativeFilePath();
+        // Rebuild all the references
         $relatingModels = [];
         foreach ($references as $modelReference) {
-            if ($modelReference !== $modelPath) {
-                $relatingModels[] = $this->getReferencedModel($modelReference);
-            } else {
-                echo 1111;
+            if ($modelReference !== $model->getRelativeFilePath()) {
+                $relatingModels[] = $modelReference;
             }
         }
 
         $this->child->setAttribute($this->referenceAttribute, $relatingModels);
-    }
-
-    /**
-     * Load and return the referenced model relative to this file.
-     *
-     * @param  string $ref
-     * @return JsonModel
-     */
-    protected function getReferencedModel($ref)
-    {
-        $repo = Repository::getInstance();
-        return $repo->loadModel($ref);
     }
 }

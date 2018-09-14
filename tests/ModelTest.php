@@ -10,13 +10,13 @@ final class ModelTest extends BaseTest
 {
     public function testCanCreateNewModelInstance(): void
     {
-        $instance = Country::new();
+        $instance = Country::new($this->repository);
         $this->assertInstanceOf(Country::class, $instance);
     }
 
     public function testCanSetAttribute(): void
     {
-        $instance = Country::new();
+        $instance = Country::new($this->repository);
         $instance->name = 'The Netherlands';
         $this->assertEquals('The Netherlands', $instance->name);
 
@@ -27,10 +27,10 @@ final class ModelTest extends BaseTest
 
     public function testCanSaveAModel(): void
     {
-        $instance = Country::new();
+        $instance = Country::new($this->repository);
         $instance->name = 'The Netherlands';
         $instance->alpha_2 = 'NL';
-        $instance->save();
+        $this->repository->save($instance);
 
         // Load the file
         $contents = file_get_contents($instance->getFullFilePath());
@@ -47,7 +47,7 @@ final class ModelTest extends BaseTest
 
     public function testCanGetSetAttributes(): void
     {
-        $instance = Country::new();
+        $instance = Country::new($this->repository);
         $instance->name = 'The Netherlands';
         $instance->setAttribute('alpha_2', 'NL');
 
@@ -69,28 +69,28 @@ final class ModelTest extends BaseTest
     public function testThrowsWhenAccessingUnknownAttribute(): void
     {
         $this->expectException(\Exception::class);
-        $instance = Country::new();
+        $instance = Country::new($this->repository);
         $instance->test;
     }
 
     public function testThrowsWhenAccessingUnknownAttributeByFunction(): void
     {
         $this->expectException(\Exception::class);
-        $instance = Country::new();
+        $instance = Country::new($this->repository);
         $instance->getAttribute('test');
     }
 
     public function testThrowsWhenSettingUnknownAttributeByFunction(): void
     {
         $this->expectException(\Exception::class);
-        $instance = Country::new();
+        $instance = Country::new($this->repository);
         $instance->setAttribute('test', 1);
     }
 
     public function testThrowsWhenSettingUnknownAttribute(): void
     {
         $this->expectException(\Exception::class);
-        $instance = Country::new();
+        $instance = Country::new($this->repository);
         $instance->test = 1;
     }
 }

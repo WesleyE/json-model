@@ -12,14 +12,18 @@ This is far from production ready, do not use (yet).
 
 ## Examples
 ```
+$repository = new Repository();
+
 // Setup the region
 $region = Region::new();
 $region->name = 'Europe';
+$repository->save($region);
 
 // Setup the country
 $country = Country::new();
 $country->alpha_2 = 'NL';
 $country->name = 'The Netherlands';
+$repository->save($country);
 
 // Attach the region
 $country->region()->associate($region);
@@ -32,7 +36,7 @@ $associatedRegion = $country->region()->get();
 
 - [x] Move to a proper UUID package
 - [x] Let the developer specify the json output directory
-- [ ] Move to an non-static repository, but keep the model<->repo connection
+- [x] Move to an non-static repository, but keep the model<->repo connection
 - [ ] Resolve the 'inverse' and add the relation
 - [ ] We cannot use 'realpath' when the relation does not exist yet
 - [ ] Create 'dirty' checks for saving

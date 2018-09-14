@@ -29,15 +29,36 @@ class JsonModel implements \JsonSerializable
      */
     protected $modelDirectory;
 
+    /**
+     * The repository this file is loaded from.
+     *
+     * @var Repository
+     */
+    protected $repository;
+
+    /**
+     * Methods in this class
+     *
+     * @var array
+     */
     protected $methods;
+
+    /**
+     * Tracks if the model has been modified after load.
+     *
+     * @var bool
+     */
+    protected $dirty;
 
     /**
      * Create a new model
      *
      * @param string $newId
      */
-    public function __construct($newId = null)
+    public function __construct(Repository $repository, $newId = null)
     {
+        $this->dirty = false;
+
         // Generate a new model
         if ($newId !== null) {
             // @todo, move the id and type default attributes here.
@@ -45,6 +66,8 @@ class JsonModel implements \JsonSerializable
             $this->attributes = $this->defaultAttributes;
             $this->setAttribute('id', $newId);
         }
+
+        $this->repository = $repository;
 
         $this->methods = get_class_methods(get_class($this));
     }
@@ -76,7 +99,7 @@ class JsonModel implements \JsonSerializable
      */
     public function getFullFilePath()
     {
-        return Repository::getRepositoryPath() . $this->getModelDirectory() . '/' . $this->getFilename();
+        return $this->repository->getRepositoryPath() . $this->getModelDirectory() . '/' . $this->getFilename();
     }
 
     /**
@@ -87,6 +110,15 @@ class JsonModel implements \JsonSerializable
     public function getRelativeFilePath()
     {
         return  $this->getModelDirectory() . '/' . $this->getFilename();
+    }
+
+    /**
+     * Grab the associated Repository
+     *
+     * @return Repository
+     */
+    public function getRepository() {
+        return $this->repository;
     }
 
     /**
@@ -108,6 +140,7 @@ class JsonModel implements \JsonSerializable
     public function deserialize(array $attributes)
     {
         $this->attributes = $attributes;
+        $this->dirty = false;
     }
 
     public function __get(string $name)
@@ -128,11 +161,7 @@ class JsonModel implements \JsonSerializable
 
     public function __set(string $name, $value)
     {
-        if (!in_array($name, array_keys($this->defaultAttributes))) {
-            throw new \Exception(self::class . ' has no attribute ' . $name);
-        }
-        
-        // todo: check for mutators?
+        $this->setAttribute($name, $value);
         $this->attributes[$name] = $value;
     }
 
@@ -155,10 +184,12 @@ class JsonModel implements \JsonSerializable
      */
     public function setAttribute(string $name, $value)
     {
+        // todo: check for mutators?
         if (!array_key_exists($name, $this->defaultAttributes)) {
             throw new \Exception('Attribute '.$name.' does not exist');
         }
 
+        $this->dirty = false;
         $this->attributes[$name] = $value;
     }
 
@@ -176,17 +207,10 @@ class JsonModel implements \JsonSerializable
         return $this->attributes[$name];
     }
 
-    public function save()
-    {
-        $json = json_encode($this, JSON_PRETTY_PRINT);
-        
-        file_put_contents($this->getFullFilePath(), $json);
-    }
-
-    public static function new()
+    public static function new(Repository $repository)
     {
         $class = get_called_class();
-        return new $class(Uuid::uuid4()->toString());
+        return new $class($repository, Uuid::uuid4()->toString());
     }
 
     /**
@@ -200,7 +224,33 @@ class JsonModel implements \JsonSerializable
         // Get path relative to this 'file'
         $fullPath = $this->getModelDirectory() . '/' . $ref;
 
-        $repo = Repository::getInstance();
-        return $repo->loadModel($fullPath);
+        return $this->repository->loadModel($fullPath);
+    }
+
+    /**
+     * Returns true if the model has been modified.
+     *
+     * @return boolean
+     */
+    public function isDirty() {
+        return $this->dirty;
+    }
+
+    /**
+     * Set to true if the model has been modified.
+     *
+     * @return boolean
+     */
+    public function setDirty($dirty) {
+        return $this->dirty = $dirty;
+    }
+
+    /**
+     * Returns true if the model has been saved (at least once).
+     *
+     * @return boolean
+     */
+    public function isSaved() {
+        return is_file($this->getFullFilePath());
     }
 }

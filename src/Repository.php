@@ -5,27 +5,19 @@ namespace WesleyE\JsonModel;
 /**
  * JSON Model Repository
  *
- * @todo: Move this into a singleton.
  */
-final class Repository
+class Repository
 {
 
     /**
      * Path of the repository
      */
-    protected static $repoPath = '';
+    protected $repoPath = '';
 
     /**
      * Class path to the Models Directory
      */
-    protected static $repoClassPath = '';
-
-    /**
-     * Singleton Instance
-     *
-     * @var Repository
-     */
-    protected static $instance = null;
+    protected $repoClassPath = '';
 
     /**
      * All loaded models
@@ -34,47 +26,54 @@ final class Repository
      */
     protected $loadedModels = [];
 
+    /**
+     * Loaded full file paths for easy lookups. Paths map to 
+     * an array with pathIndex = [type, uuid].
+     *
+     * @var array
+     */
+    protected $loadedPaths = [];
 
-    protected function __construct()
+    /**
+     * Creates a new repository
+     *
+     * @param string $repoPath Full path to the repository, with trailing slash
+     * @param string $repoClassPath Full Class path to the models
+     */
+    public function __construct($repoPath, $repoClassPath)
     {
+        $this->repoPath = $repoPath;
+        $this->repoClassPath = $repoClassPath;
     }
 
-    public static function setRepositoryPath($path)
+    /**
+     * Get the full path to the .json files on disk.
+     *
+     * @return string
+     */
+    public function getRepositoryPath()
     {
-        self::$repoPath = $path;
+        return $this->repoPath;
     }
 
-    public static function getRepositoryPath()
+    /**
+     * Get the base Class Path to find the models.
+     *
+     * @return string
+     */
+    public function getRepositoryClassPath()
     {
-        return self::$repoPath;
+        return $this->repoClassPath;
     }
 
-    public static function setRepositoryClassPath($classPath)
-    {
-        self::$repoClassPath = $classPath;
-    }
-
-    public static function getRepositoryClassPath()
-    {
-        return self::$repoClassPath;
-    }
-
+    /**
+     * Clear all loaded models
+     *
+     * @return void
+     */
     public function clearModelCache()
     {
         $this->loadedModels = [];
-    }
-
-    protected function __clone()
-    {
-        throw new \Exception("No cloning of a singleton.");
-    }
-
-    public static function getInstance()
-    {
-        if (!isset(static::$instance)) {
-            static::$instance = new static;
-        }
-        return static::$instance;
     }
 
     /**
@@ -85,21 +84,33 @@ final class Repository
      */
     public function loadModel(string $file)
     {
-        // @todo: check for path and return if already loaded
+        // echo "\n\tLoading: " . $file . "\n";
+        // Check for path and return if already loaded
+        if(array_key_exists($file, $this->loadedPaths)) {
+            // echo "\n\t\tFrom Cache\n";
+            // Load the correct file
+            return $this->loadedPaths[$file];
+        }
 
-        // Load JSON
-        $realPath = realpath(self::$repoPath . $file);
-        $json = json_decode(file_get_contents($realPath), true);
-        
-        // Grab type and deserialize
-        $class = self::$repoClassPath.$json['type'];
-        $id = $json['id'];
+        try {
+            // Load JSON
+            $realPath = realpath($this->repoPath . $file);
+            $json = json_decode(file_get_contents($realPath), true);
+            
+            // Grab type and deserialize
+            $class = $this->repoClassPath.$json['type'];
+            $id = $json['id'];
 
-        $model = new $class();
-        $model->deserialize($json);
+            $model = new $class($this);
+            $model->deserialize($json);
+        } catch (\Exception $e) {
+            throw new \Exception('Could not load model.', 100, $e);
+        }
 
         // Add to the repository
         $this->loadedModels[$json['type']][$id] = $model;
+
+        $this->loadedPaths[$file] = $model;
 
         return $model;
     }
@@ -133,5 +144,25 @@ final class Repository
                 return $model;
             }
         }
+    }
+
+    /**
+     * Saves the JSON Model
+     *
+     * @return void
+     */
+    public function save(JsonModel $model)
+    {
+        $json = json_encode($model, JSON_PRETTY_PRINT);
+        $path = $model->getFullFilePath();
+
+        if(empty($path)) {
+            throw new \Exception('Cannot save the model to an empty path.');
+        }
+
+        file_put_contents($path, $json);
+
+        $this->loadedModels[$model->type][$model->id] = $model;
+        $this->loadedPaths[$path] = $model;
     }
 }

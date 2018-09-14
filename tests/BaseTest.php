@@ -14,9 +14,7 @@ abstract class BaseTest extends TestCase
     public function setUp()
     {
         clearRepository();
-        $this->repository = Repository::getInstance();
-        $this->repository->setRepositoryPath(__DIR__ . '/Json/');
-        $this->repository->setRepositoryClassPath('\\WesleyE\JsonModel\Test\\TestModels\\');
+        $this->repository = new Repository(__DIR__ . '/Json/', '\\WesleyE\JsonModel\Test\\TestModels\\');
     }
 
     public function clearCacheAndRepository()

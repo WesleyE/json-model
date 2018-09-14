@@ -9,28 +9,22 @@ use WesleyE\JsonModel\Repository;
 
 final class RelationTest extends BaseTest
 {
-    public function testCanAttachUnsavedRelations(): void
+    public function testCannotAttachUnsavedRelations(): void
     {
         $this->clearCacheAndRepository();
 
         // Setup the region
-        $region = Region::new();
+        $region = Region::new($this->repository);
         $region->name = 'Europe';
 
         // Setup the country
-        $country = Country::new();
+        $country = Country::new($this->repository);
         $country->alpha_2 = 'NL';
         $country->name = 'The Netherlands';
 
         // Attach the region
+        $this->expectException(\Exception::class);
         $country->region()->associate($region);
-
-        // Test if we can get the region
-        $associatedRegion = $country->region()->get();
-        $this->assertInstanceOf(Region::class, $associatedRegion);
-
-        // Test if we can grab the region
-        $this->assertEquals('Europe', $associatedRegion->getAttribute('name'));
     }
 
     public function testCanCreateCountryWithRegion(): void
@@ -38,15 +32,15 @@ final class RelationTest extends BaseTest
         $this->clearCacheAndRepository();
 
         // Setup the region and save it
-        $region = Region::new();
+        $region = Region::new($this->repository);
         $region->name = 'Europe';
-        $region->save();
+        $this->repository->save($region);
         
         // Setup the country
-        $country = Country::new();
+        $country = Country::new($this->repository);
         $country->alpha_2 = 'NL';
         $country->name = 'The Netherlands';
-        $country->save();
+        $this->repository->save($country);
 
         // Attach the region
         $country->region()->associate($region);
@@ -66,26 +60,27 @@ final class RelationTest extends BaseTest
         $this->clearCacheAndRepository();
 
         // Setup the region and save it
-        $region = Region::new();
+        $region = Region::new($this->repository);
         $region->name = 'Europe';
-        $region->save();
+        $this->repository->save($region);
         
         // Setup the country
-        $country = Country::new();
+        $country = Country::new($this->repository);
         $country->alpha_2 = 'NL';
         $country->name = 'The Netherlands';
         $country->region()->associate($region);
-        $country->save();
+        $this->repository->save($country);
 
         // Setup the country
-        $country2 = Country::new();
+        $country2 = Country::new($this->repository);
         $country2->alpha_2 = 'BE';
         $country2->name = 'Belgium';
         $country2->region()->associate($region);
-        $country2->save();
+        $this->repository->save($country2);
 
         $associatedRegion = $country->region()->get();
         $associatedRegion->name = 'Europe_2';
+        $this->repository->save($associatedRegion);
 
         $associatedRegion = $country2->region()->get();
         

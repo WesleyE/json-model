@@ -37,6 +37,9 @@ class RelatesTo
      */
     public function associate($model)
     {
+        if(!$model->isSaved()) {
+            throw new \Exception('Cannot associate unsaved models.');
+        }
         $this->child->setAttribute($this->referenceAttribute, ['$ref' => $model->getRelativeFilePath()]);
     }
 
@@ -58,7 +61,8 @@ class RelatesTo
      */
     protected function getReferencedModel($ref)
     {
-        $repo = Repository::getInstance();
+        // echo "\n\tLoading ReferencedModel: " . $ref . "\n";
+        $repo = $this->child->getRepository();
         return $repo->loadModel($ref);
     }
 }

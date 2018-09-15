@@ -8,6 +8,34 @@ use WesleyE\JsonModel\Repository;
 
 final class ModelTest extends BaseTest
 {
+    public function testCanLoadModelFromDistk(): void
+    {
+        $instance = Country::new($this->repository);
+        $instance->name = 'Germany';
+        $instance->alpha_2 = 'DE';
+        $this->repository->save($instance);
+
+        $this->repository->clearModelCache();
+
+        $germany = $this->repository->loadModel('countries/DE.json');
+
+        $this->assertEquals('Germany', $germany->name);
+    }
+
+    public function testCanCommitToDisk(): void
+    {
+        $this->clearCacheAndRepository();
+
+        $instance = Country::new($this->repository);
+        $instance->name = 'Germany';
+        $instance->alpha_2 = 'DE';
+        $this->repository->save($instance);
+
+        clearRepository();
+        $this->repository->commitToDisk();
+        $this->assertFileExists($this->repository->getRepositoryPath() . 'countries/DE.json');
+    }
+
     public function testCanCreateNewModelInstance(): void
     {
         $instance = Country::new($this->repository);
@@ -92,5 +120,33 @@ final class ModelTest extends BaseTest
         $this->expectException(\Exception::class);
         $instance = Country::new($this->repository);
         $instance->test = 1;
+    }
+
+    public function testCanCheckForDirty(): void
+    {
+        $this->clearCacheAndRepository();
+
+        $instance = Country::new($this->repository);
+        $instance->name = 'Germany';
+        $instance->alpha_2 = 'DE';
+        $this->repository->save($instance);
+
+        $this->assertFalse($instance->isDirty());
+
+        $instance->alpha_2 = 'DEE';
+        $this->assertTrue($instance->isDirty());
+    }
+
+    public function testCanCheckForSaved(): void
+    {
+        $this->clearCacheAndRepository();
+
+        $instance = Country::new($this->repository);
+        $instance->name = 'Germany';
+        $instance->alpha_2 = 'DE';
+        $this->assertFalse($instance->isSaved());
+
+        $this->repository->save($instance);
+        $this->assertTrue($instance->isSaved());
     }
 }

@@ -163,6 +163,9 @@ class Repository
 
         $this->loadedModels[$model->type][$model->id] = $model;
         $this->loadedPaths[$model->getRelativeFilePath()] = $model;
+
+        // Reset dirty
+        $model->setDirty(false);
     }
 
     /**

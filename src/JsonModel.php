@@ -198,7 +198,7 @@ class JsonModel implements \JsonSerializable
             throw new \Exception('Attribute '.$name.' does not exist');
         }
 
-        $this->dirty = false;
+        $this->dirty = true;
         $this->attributes[$name] = $value;
     }
 

@@ -30,12 +30,17 @@ class RelatesTo extends BaseRelation
      *
      * @return void
      */
-    public function associate($model)
+    public function associate($model, $updateInverse = true)
     {
         if (!$model->isSaved()) {
             throw new ModelNotFoundException('Cannot associate unsaved models.');
         }
+
         $this->child->setAttribute($this->referenceAttribute, ['$ref' => $model->getRelativeFilePath()]);
+
+        if ($updateInverse) {
+            $this->addInverse($model);
+        }
     }
 
     /**
@@ -43,8 +48,13 @@ class RelatesTo extends BaseRelation
      *
      * @return void
      */
-    public function dissociate()
+    public function dissociate($updateInverse = true)
     {
+        // Do this first, since we do not nessesarily need the model.
+        if ($updateInverse) {
+            $this->removeInverse($this->get());
+        }
+
         $this->child->setAttribute($this->referenceAttribute, ['$ref' => null]);
     }
 }

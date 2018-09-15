@@ -110,4 +110,40 @@ final class RelationTest extends BaseTest
         $this->expectException(NoModelReferenceException::class);
         $associatedRegion = $country->region()->get();
     }
+
+    public function testAssociateShouldUpdateReverse(): void
+    {
+        $this->clearCacheAndRepository();
+
+        $netherlands = $this->createNetherlands();
+        $belgium = $this->createBelgium();
+        $europe = $this->createEurope();
+
+        $netherlands->region()->associate($europe);
+        $belgium->region()->associate($europe);
+
+        $this->assertEquals([
+            $netherlands,
+            $belgium
+        ], $europe->countries()->get());
+    }
+
+    public function testDissociateShouldUpdateReverse(): void
+    {
+        $this->clearCacheAndRepository();
+
+        $netherlands = $this->createNetherlands();
+        $belgium = $this->createBelgium();
+        $europe = $this->createEurope();
+
+        $netherlands->region()->associate($europe);
+        $belgium->region()->associate($europe);
+
+
+        $belgium->region()->dissociate($europe);
+
+        $this->assertEquals([
+            $netherlands,
+        ], $europe->countries()->get());
+    }
 }

@@ -32,6 +32,7 @@
         "phpcs": "phpcs src tests --standard=psr2 -sp --colors",
         "lint-fix": "phpcbf src tests --standard=psr2 -sp --colors",
         "phpunit": "phpunit --verbose",
+        "debug": "php  -dxdebug.remote_enable=1 -dxdebug.remote_autostart=On -dxdebug.remote_host=localhost ./vendor/phpunit/phpunit/phpunit",
         "test": [
             "@lint",
             "@phpunit",

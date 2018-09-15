@@ -26,6 +26,6 @@ class Country extends JsonModel
 
     public function region()
     {
-        return new RelatesTo($this, 'region');
+        return new RelatesTo($this, 'region', 'countries');
     }
 }

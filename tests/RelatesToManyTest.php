@@ -28,23 +28,6 @@ final class RelatesToManyTest extends BaseTest
         ], $europe->countries()->get());
     }
 
-    // public function testAssociateShouldUpdateReverse(): void
-    // {
-    //     $this->clearCacheAndRepository();
-
-    //     $netherlands = $this->createNetherlands();
-    //     $belgium = $this->createBelgium();
-    //     $europe = $this->createEurope();
-
-    //     $netherlands->region()->associate($europe);
-    //     $belgium->region()->associate($europe);
-
-    //     $this->assertEquals([
-    //         $netherlands,
-    //         $belgium
-    //     ], $europe->countries()->get());
-    // }
-
     public function testDetachRelation(): void
     {
         $this->clearCacheAndRepository();
@@ -61,5 +44,36 @@ final class RelatesToManyTest extends BaseTest
         $this->assertEquals([
             $belgium
         ], $europe->countries()->get());
+    }
+
+    public function testAttachShouldUpdateReverse(): void
+    {
+        $this->clearCacheAndRepository();
+
+        $netherlands = $this->createNetherlands();
+        $belgium = $this->createBelgium();
+        $europe = $this->createEurope();
+
+        $europe->countries()->attach($netherlands);
+        $europe->countries()->attach($belgium);
+
+        $this->assertEquals($europe, $belgium->region()->get());
+    }
+
+    public function testDetachShouldUpdateReverse(): void
+    {
+        $this->clearCacheAndRepository();
+
+        $netherlands = $this->createNetherlands();
+        $belgium = $this->createBelgium();
+        $europe = $this->createEurope();
+
+        $europe->countries()->attach($netherlands);
+        $europe->countries()->attach($belgium);
+
+        $europe->countries()->detach($belgium);
+
+        $this->expectException(NoModelReferenceException::class);
+        $belgiumsEurope = $belgium->region()->get();
     }
 }

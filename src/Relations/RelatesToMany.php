@@ -30,13 +30,17 @@ class RelatesToMany extends BaseRelation
      *
      * @return void
      */
-    public function attach($model)
+    public function attach($model, $updateInverse = true)
     {
         $childAttributes = $this->child->getAttributes();
         $references = $childAttributes[$this->referenceAttribute];
 
         $references[] = $model->getRelativeFilePath();
         $this->child->setAttribute($this->referenceAttribute, $references);
+
+        if ($updateInverse) {
+            $this->addInverse($model);
+        }
     }
 
     /**
@@ -44,7 +48,7 @@ class RelatesToMany extends BaseRelation
      *
      * @return void
      */
-    public function detach(JsonModel $model)
+    public function detach(JsonModel $model, $updateInverse = true)
     {
         $childAttributes = $this->child->getAttributes();
         $references = $childAttributes[$this->referenceAttribute];
@@ -58,5 +62,9 @@ class RelatesToMany extends BaseRelation
         }
 
         $this->child->setAttribute($this->referenceAttribute, $relatingModels);
+
+        if ($updateInverse) {
+            $this->removeInverse($model);
+        }
     }
 }

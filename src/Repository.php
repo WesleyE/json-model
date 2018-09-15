@@ -90,6 +90,7 @@ class Repository
         // Check for path and return if already loaded
         if (array_key_exists($file, $this->loadedPaths)) {
             // echo "\n\t\tFrom Cache\n";
+            
             // Load the correct file
             return $this->loadedPaths[$file];
         }
@@ -161,6 +162,20 @@ class Repository
         file_put_contents($path, $json);
 
         $this->loadedModels[$model->type][$model->id] = $model;
-        $this->loadedPaths[$path] = $model;
+        $this->loadedPaths[$model->getRelativeFilePath()] = $model;
+    }
+
+    /**
+     * Commit all loaded models to disk.
+     *
+     * @return void
+     */
+    public function commitToDisk()
+    {
+        foreach ($this->loadedModels as $modelTypes) {
+            foreach ($modelTypes as $model) {
+                $this->save($model);
+            }
+        }
     }
 }

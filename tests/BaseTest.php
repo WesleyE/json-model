@@ -23,34 +23,45 @@ abstract class BaseTest extends TestCase
         $this->repository->clearModelCache();
     }
 
-    protected function createNetherlands()
+    protected function createCountry($alpha2, $name)
     {
-        // Ok. Not the real one, but the model.
-
         $country = Country::new($this->repository);
-        $country->alpha_2 = 'NL';
-        $country->name = 'The Netherlands';
+        $country->alpha_2 = $alpha2;
+        $country->name = $name;
         $this->repository->save($country);
         return $country;
+    }
+
+    protected function createRegion($name)
+    {
+        $region = Region::new($this->repository);
+        $region->name = $name;
+        $this->repository->save($region);
+        return $region;
+    }
+
+    protected function createNetherlands()
+    {
+        return $this->createCountry('NL', 'The Netherlands');
     }
 
     protected function createBelgium()
     {
-        // We've tried.
+        return $this->createCountry('BE', 'Belgium');
+    }
 
-        $country = Country::new($this->repository);
-        $country->alpha_2 = 'BE';
-        $country->name = 'Belgium';
-        $this->repository->save($country);
-        return $country;
+    protected function createChina()
+    {
+        return $this->createCountry('CN', 'China');
     }
 
     protected function createEurope()
     {
-        // I'm out of jokes.
-        $region = Region::new($this->repository);
-        $region->name = 'Europe';
-        $this->repository->save($region);
-        return $region;
+        return $this->createRegion('Europe');
+    }
+
+    protected function createAsia()
+    {
+        return $this->createRegion('Asia');
     }
 }

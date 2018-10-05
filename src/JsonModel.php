@@ -265,4 +265,15 @@ class JsonModel implements \JsonSerializable
     {
         return is_file($this->getFullFilePath());
     }
+
+    /**
+     * Returns true if the attribute is a relation
+     *
+     * @param string $attribute
+     * @return boolean
+     */
+    public function isRelation(string $attribute) : bool
+    {
+        return in_array($attribute, $this->methods);
+    }
 }

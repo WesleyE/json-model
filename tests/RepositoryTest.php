@@ -30,4 +30,46 @@ final class RepositoryTest extends BaseTest
         $this->expectException(ModelNotFoundException::class);
         $this->repository->loadModel('test.jhson');
     }
+
+    public function testLoadsAllFiles(): void
+    {
+        $this->clearCacheAndRepository();
+
+        $netherlands = $this->createNetherlands();
+        $belgium = $this->createBelgium();
+
+        $countryModels = $this->repository->loadAllModelsByType('countries');
+        $this->assertEquals(2, count($countryModels));
+
+        $countryModels = $this->repository->getAllModelsByType('countries');
+        $this->assertEquals(2, count($countryModels));
+    }
+
+    public function testIfFindsModelsByAttribute()
+    {
+        $this->clearCacheAndRepository();
+
+        $netherlands = $this->createNetherlands();
+        $belgium = $this->createBelgium();
+        $europe = $this->createEurope();
+
+        $china = $this->createChina();
+        $asia = $this->createAsia();
+
+        $europe->countries()->attach($netherlands);
+        $europe->countries()->attach($belgium);
+
+        $asia->countries()->attach($china);
+
+        $nlCountries = $this->repository->getModelsByTypeAndAttribute('Country', 'alpha_2', 'NL');
+
+        $this->assertEquals(1, count($nlCountries));
+
+        // By ref
+        $europeCountries = $this->repository->getModelsByTypeAndAttribute('Country', 'region', 'regions/Europe.json');
+        $this->assertEquals(2, count($europeCountries));
+
+        $asiaCountries = $this->repository->getModelsByTypeAndAttribute('Country', 'region', $asia);
+        $this->assertEquals(1, count($asiaCountries));
+    }
 }

@@ -8,7 +8,7 @@ use WesleyE\JsonModel\Repository;
 
 final class ModelTest extends BaseTest
 {
-    public function testCanLoadModelFromDistk(): void
+    public function testCanLoadModelFromDist(): void
     {
         $instance = Country::new($this->repository);
         $instance->name = 'Germany';

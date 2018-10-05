@@ -4,6 +4,7 @@ namespace WesleyE\JsonModel\Test;
 
 use PHPUnit\Framework\TestCase;
 use WesleyE\JsonModel\Test\TestModels\Country;
+use WesleyE\JsonModel\Test\TestModels\Region;
 use WesleyE\JsonModel\Repository;
 use WesleyE\JsonModel\Exceptions\ModelNotFoundException;
 
@@ -38,11 +39,13 @@ final class RepositoryTest extends BaseTest
         $netherlands = $this->createNetherlands();
         $belgium = $this->createBelgium();
 
-        $countryModels = $this->repository->loadAllModelsByType('countries');
+        $countryModels = $this->repository->loadAllModelsByDirName('countries');
         $this->assertEquals(2, count($countryModels));
 
-        $countryModels = $this->repository->getAllModelsByType('countries');
-        $this->assertEquals(2, count($countryModels));
+        $this->createEurope();
+
+        $regionModels = $this->repository->loadAllModelsByType(Region::class);
+        $this->assertEquals(1, count($regionModels));
     }
 
     public function testIfFindsModelsByAttribute()

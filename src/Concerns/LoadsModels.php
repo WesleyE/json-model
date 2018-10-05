@@ -78,14 +78,25 @@ trait LoadsModels
     }
 
     /**
-     * Loads all models found in a subdirectory matching the 'type'
+     * Loads all models found in a subdirectory matching the 'type' class
      *
      * @param string $type
      * @return Model[]
      */
     public function loadAllModelsByType(string $type) : array
     {
-        $files = array_merge(glob($this->repoPath . $type . '/*.json'));
+        return $this->loadAllModelsByDirName($type::getModelDirectory());
+    }
+
+    /**
+     * Loads all models found in a subdirectory
+     *
+     * @param string $type
+     * @return Model[]
+     */
+    public function loadAllModelsByDirName(string $directory) : array
+    {
+        $files = array_merge(glob($this->repoPath . $directory . '/*.json'));
 
         $models = [];
         foreach ($files as $file) {

@@ -7,7 +7,7 @@ use WesleyE\JsonModel\Relations\RelatesToMany;
 
 class Region extends JsonModel
 {
-    protected $modelDirectory = 'regions';
+    protected static $modelDirectory = 'regions';
     
     protected $defaultAttributes = [
         'id' => null,

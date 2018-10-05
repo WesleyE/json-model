@@ -27,7 +27,7 @@ class JsonModel implements \JsonSerializable
      *
      * @var string
      */
-    protected $modelDirectory;
+    protected static $modelDirectory;
 
     /**
      * The repository this file is loaded from.
@@ -77,9 +77,9 @@ class JsonModel implements \JsonSerializable
      *
      * @return string
      */
-    public function getModelDirectory()
+    public static function getModelDirectory()
     {
-        return $this->modelDirectory;
+        return static::$modelDirectory;
     }
 
     /**
@@ -103,7 +103,7 @@ class JsonModel implements \JsonSerializable
         if (empty($filename) || $filename === ".json") {
             throw new \Exception('Cannot save a model when the filename resolves to an empty string');
         }
-        return $this->repository->getRepositoryPath() . $this->getModelDirectory() . '/' . $this->getFilename();
+        return $this->repository->getRepositoryPath() . self::getModelDirectory() . '/' . $this->getFilename();
     }
 
     /**
@@ -117,7 +117,7 @@ class JsonModel implements \JsonSerializable
         if (empty($filename) || $filename === ".json") {
             throw new \Exception('Cannot save a model when the filename resolves to an empty string');
         }
-        return  $this->getModelDirectory() . '/' . $this->getFilename();
+        return  self::getModelDirectory() . '/' . $this->getFilename();
     }
 
     /**
@@ -231,7 +231,7 @@ class JsonModel implements \JsonSerializable
     protected function getReferencedModel($ref)
     {
         // Get path relative to this 'file'
-        $fullPath = $this->getModelDirectory() . '/' . $ref;
+        $fullPath = self::getModelDirectory() . '/' . $ref;
 
         return $this->repository->loadModel($fullPath);
     }

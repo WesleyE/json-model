@@ -7,7 +7,7 @@ use WesleyE\JsonModel\Relations\RelatesTo;
 
 class Country extends JsonModel
 {
-    protected $modelDirectory = 'countries';
+    protected static $modelDirectory = 'countries';
     
     protected $defaultAttributes = [
         'id' => null,
